@@ -8,17 +8,17 @@ with open(sys.argv[1]) as f:
   for i,c in enumerate(line):
     n = int(c)
     if i%2 == 0:
+      # a file; record its natural position
       natpos.append(pos)
     elif n != 0:
+      # a gap; record it in the lookup
       while n+1 > len(gaps):
         gaps.append([])
       gaps[n].append(pos)
     pos += n
   #print(f'gaps: {gaps}')
 
-  tail = len(line)-1
-  if tail%2 == 1:
-    tail -= 1
+  idx = len(line)//2
   def getbest(n, gaps):
     best = None
     while n < len(gaps):
@@ -27,17 +27,16 @@ with open(sys.argv[1]) as f:
       n += 1
     return best
   result = 0
-  while tail >= 0:
-    
-    n = int(line[tail]) 
-    pos = natpos[tail//2]
+  while idx >= 0:
+    n = int(line[idx*2]) 
+    pos = natpos[idx]
     bestgap = getbest(n, gaps)
     if bestgap is None or gaps[bestgap][0] > pos:
-      #print(f'leaving {tail//2} at {pos}') 
+      #print(f'leaving {idx} at {pos}') 
       pass
     else: 
       bestpos = gaps[bestgap][0]
-      #print(f'moving {tail//2} from {pos} to {bestpos}')
+      #print(f'moving {idx} from {pos} to {bestpos}')
       pos = bestpos
       gaps[bestgap] = gaps[bestgap][1:]
       newpos = bestpos+n
@@ -53,7 +52,7 @@ with open(sys.argv[1]) as f:
         gaps[newgap] = newlist
       #print(f'gaps now: {gaps}')
     for _ in range(n):
-      result += pos*(tail//2)
+      result += pos*idx
       pos += 1
-    tail -= 2
+    idx -= 1
   print(f'{result}')
