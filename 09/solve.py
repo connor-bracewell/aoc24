@@ -1,7 +1,4 @@
 import sys
-import logging
-
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
 
 with open(sys.argv[1]) as f:
   line = f.readline().strip()

@@ -1,7 +1,4 @@
 import sys
-import logging
-
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s %(message)s')
 
 with open(sys.argv[1]) as f:
   ants = {}
@@ -17,7 +14,7 @@ with open(sys.argv[1]) as f:
     return (pos1[0] - pos2[0], pos1[1] - pos2[1]) 
   def in_bounds(pos):
     result = (0 <= pos[0] <= y and 0 <= pos[1] <= x)
-    logging.debug(f'{pos} {"is" if result else "isn\'t"} in bounds ({y}x{x})')
+    #print(f'{pos} {"is" if result else "isn\'t"} in bounds ({y}x{x})')
     return result
   nodes = set()
   for c,locs in ants.items():
