@@ -16,7 +16,7 @@ with open(sys.argv[1]) as f:
         gaps.append([])
       gaps[n].append(pos)
     pos += n
-  #print(f'gaps: {gaps}')
+  print(f'gaps: {gaps}')
 
   idx = len(line)//2
   def getbest(n, gaps):
@@ -32,11 +32,11 @@ with open(sys.argv[1]) as f:
     pos = natpos[idx]
     bestgap = getbest(n, gaps)
     if bestgap is None or gaps[bestgap][0] > pos:
-      #print(f'leaving {idx} at {pos}') 
+      print(f'leaving {idx} (len {n}) at {pos}') 
       pass
     else: 
       bestpos = gaps[bestgap][0]
-      #print(f'moving {idx} from {pos} to {bestpos}')
+      print(f'moving {idx} (len {n}) from {pos} to {bestpos} (gap of size {bestgap})')
       pos = bestpos
       gaps[bestgap] = gaps[bestgap][1:]
       newpos = bestpos+n
@@ -50,7 +50,7 @@ with open(sys.argv[1]) as f:
         newlist.append(newpos)
         newlist += gaps[newgap][i:]
         gaps[newgap] = newlist
-      #print(f'gaps now: {gaps}')
+      print(f'gaps now: {gaps}')
     for _ in range(n):
       result += pos*idx
       pos += 1
