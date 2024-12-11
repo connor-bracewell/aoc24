@@ -1,58 +1,42 @@
 import sys
+from bisect import insort
 
 with open(sys.argv[1]) as f:
   line = f.readline().strip()
-  pos = 0 # current 'filesystem' position
-  natpos = [] # natural 'filesystem' position for file n
-  gaps = [] # positions (sorted) of gaps of size n
-  for i,c in enumerate(line):
-    n = int(c)
-    if i%2 == 0:
-      # a file; record its natural position
-      natpos.append(pos)
-    elif n != 0:
-      # a gap; record it in the lookup
-      while n+1 > len(gaps):
-        gaps.append([])
-      gaps[n].append(pos)
-    pos += n
-  print(f'gaps: {gaps}')
+files = []
+gaps = [] # positions (sorted) of gaps of size n
+pos = 0 # current 'filesystem' position
+for i,n in enumerate([int(c) for c in line]):
+  if i%2 == 0:
+    files.append((pos,n))
+  elif n != 0:
+    while len(gaps) <= n:
+      gaps.append([])
+    gaps[n].append(pos)
+  pos += n
+print(f'gaps: {gaps}')
 
-  idx = len(line)//2
-  def getbest(n, gaps):
-    best = None
-    while n < len(gaps):
-      if len(gaps[n]) > 0 and ((best is None) or (gaps[n][0] < gaps[best][0])):
-        best = n
-      n += 1
-    return best
-  result = 0
-  while idx >= 0:
-    n = int(line[idx*2]) 
-    pos = natpos[idx]
-    bestgap = getbest(n, gaps)
-    if bestgap is None or gaps[bestgap][0] > pos:
-      print(f'leaving {idx} (len {n}) at {pos}') 
-      pass
-    else: 
-      bestpos = gaps[bestgap][0]
-      print(f'moving {idx} (len {n}) from {pos} to {bestpos} (gap of size {bestgap})')
-      pos = bestpos
-      gaps[bestgap] = gaps[bestgap][1:]
-      newpos = bestpos+n
-      newgap = bestgap-n
-      if newgap != 0:
-        i = 0
-        newlist = []
-        while i < len(gaps[newgap]) and gaps[newgap][i] < newpos:
-          newlist.append(gaps[newgap][i])
-          i += 1
-        newlist.append(newpos)
-        newlist += gaps[newgap][i:]
-        gaps[newgap] = newlist
-      print(f'gaps now: {gaps}')
-    for _ in range(n):
-      result += pos*idx
-      pos += 1
-    idx -= 1
-  print(f'{result}')
+def getbestgap(n, gaps):
+  bestgap = None
+  bestpos = None
+  for i,l in enumerate(gaps[n:]):
+    if len(l) > 0 and (bestgap is None or l[0] < bestpos):
+      bestgap = i
+      bestpos = l[0]
+  return n+bestgap
+
+result = 0
+for idx,pos,n in reversed([(i,file[0],file[1]) for i,file in enumerate(files)]):
+  bestgap = getbestgap(n, gaps)
+  if bestgap is None or gaps[bestgap][0] > pos:
+    print(f'leaving {idx} (len {n}) at {pos}') 
+    pass
+  else: 
+    bestpos = gaps[bestgap].pop(0)
+    print(f'moving {idx} (len {n}) from {pos} to {bestpos} (gap of size {bestgap})')
+    pos = bestpos
+    if (newgap := bestgap-n) != 0:
+      insort(gaps[newgap], bestpos+n)
+    #print(f'gaps now: {gaps}')
+  result += idx * ((pos+n-1)*(pos+n) - (pos-1)*pos) // 2
+print(f'{result}')
