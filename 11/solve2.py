@@ -1,7 +1,7 @@
 import sys
 from math import log10
 
-reps = int(sys.argv[2])
+reps = int(sys.argv[2]) if len(sys.argv) > 2 else 75
 cache = [{} for _ in range(reps+1)]
 
 def lookup(times, n):
@@ -24,6 +24,6 @@ with open(sys.argv[1]) as f:
   stones = [int(s) for s in f.readline().split()]
 result = sum([lookup(reps, s) for s in stones])
 if reps < 10:
-  for i,table in enumerate(cache[1:]):
-    print(f'cache {i+1}: {table}')
+  for i,table in enumerate(cache):
+    print(f'cache {i}: {table}')
 print(result)
