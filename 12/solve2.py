@@ -2,7 +2,7 @@ import sys
 
 with open(sys.argv[1]) as f:
   grid = [[c for c in line.strip()] for line in f]
-visited =[[None for _ in row] for row in grid]
+visited = [[None for _ in row] for row in grid]
 
 def iny(y):
   return 0<=y<len(grid)
