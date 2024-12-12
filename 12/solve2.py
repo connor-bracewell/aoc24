@@ -9,7 +9,7 @@ def iny(y):
 def inx(x):
   return 0<=x<len(grid[0])
 
-dw,de,dn,ds = 0,1,2,3
+dn,dw,ds,de = 0,1,2,3
 
 def sample(y,x,d):
   if d == dw:
@@ -38,23 +38,11 @@ def samplev(y,x,d,d2):
     return iny(y-1) and visited[y-1][x] and visited[y-1][x][d2]
   return iny(y+1) and visited[y+1][x] and visited[y+1][x][d2]
 
-def rell(d):
-  if d == dw:
-    return dn
-  if d == de:
-    return ds
-  if d == dn:
-    return de
-  return dw
-
 def relr(d):
-  if d == dw:
-    return ds
-  if d == de:
-    return dn
-  if d == dn:
-    return dw
-  return de
+  return (d-1)%4
+
+def rell(d):
+  return (d+1)%4
 
 def adjresult(y,x,d,c):
   findl = sample(y,x,rell(d)) == c and samplev(y,x,rell(d),d)
