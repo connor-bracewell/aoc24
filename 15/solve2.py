@@ -20,8 +20,9 @@ with open(sys.argv[1]) as f:
     moves += l.strip()
 
 def show():
-  for row in grid:
-    print(''.join(row))
+    def color(text, ccode):
+      return f'\033[{ccode}m{text}\033[0m'
+    print('\n'.join(''.join(row) for row in grid).replace('.',' ').replace('[]',color('[]', 90)).replace('@',color('&',31)))
 show()
 print(f'{len(moves)} moves')
 
@@ -33,7 +34,6 @@ for y, row in enumerate(grid):
       rx=x;
       ry=y  
 for m in moves:
-  print(f'move: {m}')
   dx = 0
   dy = 0
   if m == '^':
@@ -49,9 +49,7 @@ for m in moves:
     tx = rx+dx
     while grid[ry][tx] not in '#.':
       tx += dx
-    if grid[ry][tx] == '#':
-      print('bonk')
-    else:
+    if grid[ry][tx] == '.':
       while tx != rx:
         grid[ry][tx] = grid[ry][tx-dx]
         tx -= dx
@@ -118,8 +116,9 @@ for m in moves:
       grid[ry][rx] = '@'
     else:
       revert(rx,ry+dy,dy)
-      print('bonk')
-  show()
+  #print(f'move: {m}')
+  #show()
+show()
 result = 0
 for y, row in enumerate(grid):
   for x, c in enumerate(row):
