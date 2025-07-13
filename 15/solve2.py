@@ -57,7 +57,6 @@ for m in moves:
         tx -= dx
       grid[ry][rx] = '.'
       rx = rx+dx
-      grid[ry][rx] = '@'
   else:
     # vertical move (complicated!)
     def cast(x,y,dy):
