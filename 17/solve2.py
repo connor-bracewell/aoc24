@@ -1,17 +1,24 @@
-seq = [0,3,5,5,1,4,5,1,3,0,5,7,3,1,4,2]
+seq = [2,4,1,3,7,5,0,3,1,5,4,1,5,5,3,0]
 
+# given the leading bits of `a` and the remaining output,
+# return the least continuation of `a` that generates that output,
+# or None if no such continuation exists.
 def recursive(a, rem):
-  if not rem: return a  # done!
-  a <<= 3
+  if not rem:
+    # No more output to generate!
+    return a
+  # Try each possible value for the next 3 bits, least first.
   for d in range(8):
-    a = a&(~0b111)|d  # replace the bottom 3 bits of a with d.
-    out = a^0b110^(a>>(d^0b011))  # see notes.txt
-    # print(f'trying {d:3b}, a is {a:b}, out is {out%8:b}')
-    if out%8 == rem[0]:
-      # print(f'match @ a={a} rem={rem}...')
-      if (result := recursive(a, rem[1:])) is not None:
+    ap = (a<<3)|d
+    # See notes.txt for the reasoning.
+    b = ap^0b110
+    c = ap>>(d^0b011)
+    out = (b^c)%8
+    if out == rem[-1]:
+      # (a<<3)|d outputs the expected digit. See if there
+      # is a continuation that generates the remaining output.
+      if (result := recursive(ap, rem[:-1])) is not None:
         return result
-  # print('backing up...')
   return None
 
 print(recursive(0, seq))
