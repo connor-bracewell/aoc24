@@ -26,7 +26,8 @@ while pc >= 0 and pc < len(ops):
       cop = lop
   match ist:
     case 0:
-      a //= (1<<cop)
+      # division by 2^cop is the same as shift right by cop.
+      a = a>>cop
       print(f'adv {lop}({cop}); a={a}')
     case 1:
       b ^= lop
@@ -47,10 +48,10 @@ while pc >= 0 and pc < len(ops):
       out.append(cop%8)
       print(f'out {cop%8}')
     case 6:
-      b = a // (1<<cop)
+      b = a>>cop
       print(f'bdv {lop}({cop}); b={b}')
     case 7:
-      c = a // (1<<cop)
+      c = a>>cop
       print(f'cdv {lop}({cop}); c={c}')
   pc += 2 
 print(','.join(map(lambda o: str(o), out)))
