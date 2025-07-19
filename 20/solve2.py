@@ -1,5 +1,4 @@
 import sys
-from itertools import product
 
 start = None
 end = None
