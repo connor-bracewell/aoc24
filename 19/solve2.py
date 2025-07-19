@@ -39,8 +39,8 @@ def solve(pattern):
         print(f'matched {charize(n)} ({i}) at {node[n][6]}')
         nqueue.append((node[n], nodesum))
         if node[n][5]:
-          # When we hit a terminal, add its prefix match count to loopsum.
-          # the prefix count for the subsequent empty string prefix.
+          # When we hit a terminal, add its prefix match count to the
+          # prefix count for the subsequent empty string prefix.
           loopsum += nodesum
     if loopsum:
       nqueue.append((trie, loopsum))
