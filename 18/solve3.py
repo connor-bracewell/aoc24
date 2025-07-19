@@ -1,5 +1,10 @@
 import sys
 
+char_open = '.'
+char_wall = '#'
+char_start = 's'
+char_end = 'e'
+
 with open(sys.argv[1]) as f:
   w,_ = map(int, f.readline().strip().split(' '))
   hits = []
@@ -7,9 +12,9 @@ with open(sys.argv[1]) as f:
     x,y = map(int, l.strip().split(','))
     hits.append((x,y))
 
-grid = [['.' for _ in range(w+1)] for _ in range(w+1)]
+grid = [[char_open for _ in range(w+1)] for _ in range(w+1)]
 for x,y in hits:
-  grid[y][x] = '#'
+  grid[y][x] = char_wall
 
 def show(grid):
   print('\n'.join([''.join(row) for row in grid]))
@@ -26,29 +31,29 @@ def fillfrom(hx,hy):
       ny = y+dy
       if not (0 <= nx <= w and 0 <= ny <= w):
         continue
-      match grid[ny][nx]:
-        case 'S':
+      nc = grid[ny][nx]
+      if nc == char_start:
           fs = True
-        case 'F':
+      elif nc == char_end:
           fe = True
-        case '.':
+      elif nc == char_open:
           maybequeue.append((nx,ny))
     if fs and fe:
       grid[y][x] = '@'
       return True
     elif fs:
-      grid[y][x] = 'S'
+      grid[y][x] = char_start
       queue.extend(maybequeue)
     elif fe:
-      grid[y][x] = 'F'
+      grid[y][x] = char_end
       queue.extend(maybequeue)
     else:
-      grid[y][x] = '.'
+      grid[y][x] = char_open
   return False
 
-if grid[0][0] != '#':
+if grid[0][0] != char_wall:
   fillfrom(0,0)
-if grid[w][w] != '#':
+if grid[w][w] != char_wall:
   fillfrom(w,w)
 show(grid)
 
@@ -56,16 +61,6 @@ def solve():
   # This assumes each tile is hit at most once...
   # If not, then do a pre-cleanup of later duplicates.
   for hx,hy in hits[::-1]:
-    fs = False
-    fe = False
-    if hx == 0 and hy == 0:
-      grid[0][0] = 'S'
-      fs = True
-    elif hx == w and hy == w:
-      grid[w][w] = 'F'
-      fe = True
-    else:
-      grid[hy][hx] = '.'
     if fillfrom(hx,hy):
       return (hx,hy)
 
