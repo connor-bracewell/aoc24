@@ -53,6 +53,8 @@ if grid[w][w] != '#':
 show(grid)
 
 def solve():
+  # This assumes each tile is hit at most once...
+  # If not, then do a pre-cleanup of later duplicates.
   for hx,hy in hits[::-1]:
     fs = False
     fe = False
