@@ -49,4 +49,3 @@ while trace is not None:
   trace = prev[y][x]
 show()
 print(tscore-1)
-

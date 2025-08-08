@@ -2,6 +2,7 @@ import sys
 
 def intize(c):
   return {'w':0,'u':1,'b':2,'r':3,'g':4}[c]
+
 def charize(n):
   return 'wubrg'[n]
 
@@ -19,8 +20,8 @@ for towel in towels:
   node = trie
   for i, n in enumerate(towel):
     if node[n] is None:
-       node[n] = [None]*7
-       node[n][6] = ''.join(map(charize, towel[:i+1]))
+      node[n] = [None]*7
+      node[n][6] = ''.join(map(charize, towel[:i+1]))
     node = node[n]
   if not node[5]:
     node[5] = True
